@@ -2081,12 +2081,8 @@ static void DoCreateTown(Town *t, TileIndex tile, uint32_t townnameparts, TownSi
 	t->exclusive_counter = 0;
 	t->statues = {};
 
-	{
-		TownNameParams tnp(_settings_game.game_creation.town_name);
-		t->townnamegrfid = tnp.grfid;
-		t->townnametype = tnp.type;
-	}
-	t->townnameparts = townnameparts;
+	TownNameParams tnp(_settings_game.game_creation.town_name);
+	t->name = GetTownName(&tnp, townnameparts);
 
 	t->InitializeLayout(layout);
 

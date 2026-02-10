@@ -1222,17 +1222,10 @@ public:
 	void ExecuteFoundTownCommand(TileIndex tile, bool random, StringID errstr, Tcallback cc)
 	{
 		std::string name;
-
-		if (!this->townnamevalid) {
-			name = this->townname_editbox.text.GetText();
-		} else {
-			/* If user changed the name, send it */
-			std::string original_name = GetTownName(&this->params, this->townnameparts);
-			if (original_name != this->townname_editbox.text.GetText()) name = this->townname_editbox.text.GetText();
-		}
+		name = this->townname_editbox.text.GetText();
 
 		bool success = Command<Commands::FoundTown>::Post(errstr, cc,
-				tile, this->town_size, this->city, this->town_layout, random, townnameparts, name);
+			    tile, this->town_size, this->city, this->town_layout, random, townnameparts, name);
 
 		/* Rerandomise name, if success and no cost-estimation. */
 		if (success && !_shift_pressed) this->RandomTownName();
