@@ -45,7 +45,7 @@ TownNameParams::TownNameParams(const Town *t) :
  * @param par           Town name parameters.
  * @param townnameparts 'Encoded' town name.
  */
-static void GetTownName(StringBuilder &builder, const TownNameParams *par, uint32_t townnameparts)
+static void GetGeneratorTownName(StringBuilder &builder, const TownNameParams *par, uint32_t townnameparts)
 {
 	if (par->grfid == 0) {
 		auto tmp_params = MakeParameters(townnameparts);
@@ -62,11 +62,11 @@ static void GetTownName(StringBuilder &builder, const TownNameParams *par, uint3
  * @param townnameparts 'Encoded' town name.
  * @return The town name.
  */
-std::string GetTownName(const TownNameParams *par, uint32_t townnameparts)
+std::string GetGeneratorTownName(const TownNameParams *par, uint32_t townnameparts)
 {
 	std::string result;
 	StringBuilder builder(result);
-	GetTownName(builder, par, townnameparts);
+	GetGeneratorTownName(builder, par, townnameparts);
 	return result;
 }
 
@@ -75,10 +75,10 @@ std::string GetTownName(const TownNameParams *par, uint32_t townnameparts)
  * @param builder String builder.
  * @param t       The town to get the name from.
  */
-void GetTownName(StringBuilder &builder, const Town *t)
+void GetGeneratorTownName(StringBuilder &builder, const Town *t)
 {
 	TownNameParams par(t);
-	GetTownName(builder, &par, t->townnameparts);
+	GetGeneratorTownName(builder, &par, t->townnameparts);
 }
 
 /**
@@ -86,40 +86,25 @@ void GetTownName(StringBuilder &builder, const Town *t)
  * @param t The town to get the name for.
  * @return The town name.
  */
-std::string GetTownName(const Town *t)
+std::string GetGeneratorTownName(const Town *t)
 {
 	TownNameParams par(t);
-	return GetTownName(&par, t->townnameparts);
+	return GetGeneratorTownName(&par, t->townnameparts);
 }
 
 
 /**
  * Verifies the town name is valid and unique.
- * @param r random bits
- * @param par town name parameters
- * @param town_names if a name is generated, check its uniqueness with the set
- * @return true iff name is valid and unique
+ * @param proposed_name is the generated or custom name to check
+ * @return true if name is valid and unique
  */
-bool VerifyTownName(uint32_t r, const TownNameParams *par, TownNames *town_names)
+bool VerifyTownName(std::string proposed_name)
 {
-	std::string name = GetTownName(par, r);
-
 	/* Check size and width */
-	if (Utf8StringLength(name) >= MAX_LENGTH_TOWN_NAME_CHARS) return false;
+	if (Utf8StringLength(proposed_name) >= MAX_LENGTH_TOWN_NAME_CHARS) return false;
 
-	if (town_names != nullptr) {
-		if (town_names->find(name) != town_names->end()) return false;
-		town_names->insert(std::move(name));
-	} else {
-		for (const Town *t : Town::Iterate()) {
-			/* We can't just compare the numbers since
-			 * several numbers may map to a single name. */
-			if (t->name.empty()) {
-				if (name == GetTownName(t)) return false;
-			} else {
-				if (name == t->name) return false;
-			}
-		}
+	for (const Town *t : Town::Iterate()) {
+		if (proposed_name == t->name) return false;
 	}
 
 	return true;
@@ -133,7 +118,7 @@ bool VerifyTownName(uint32_t r, const TownNameParams *par, TownNames *town_names
  * @param town_names if a name is generated, check its uniqueness with the set
  * @return true iff a name was generated
  */
-bool GenerateTownName(Randomizer &randomizer, uint32_t *townnameparts, TownNames *town_names)
+bool GenerateTownName(Randomizer &randomizer, std::string *town_name)
 {
 	TownNameParams par(_settings_game.game_creation.town_name);
 
@@ -144,9 +129,10 @@ bool GenerateTownName(Randomizer &randomizer, uint32_t *townnameparts, TownNames
 	 * too much). */
 	for (int i = 1000; i != 0; i--) {
 		uint32_t r = randomizer.Next();
-		if (!VerifyTownName(r, &par, town_names)) continue;
+		std::string name = GetGeneratorTownName(&par, r);
+		if (!VerifyTownName(name)) continue;
 
-		*townnameparts = r;
+		*town_name = name;
 		return true;
 	}
 

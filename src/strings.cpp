@@ -1784,11 +1784,11 @@ static void FormatString(StringBuilder &builder, std::string_view str_arg, Strin
 					if (use_cache) { // Use cached version if first call
 						AutoRestoreBackup cache_backup(use_cache, false);
 						builder += t->GetCachedName();
-					} else if (!t->name.empty()) {
+					} else if (!t->name.empty()) { // these aren't reached??
 						auto tmp_params = MakeParameters(t->name);
 						GetStringWithArgs(builder, STR_JUST_RAW_STRING, tmp_params);
 					} else {
-						GetTownName(builder, t);
+						GetGeneratorTownName(builder, t);
 					}
 					break;
 				}
