@@ -209,7 +209,9 @@ void GetStringWithArgs(StringBuilder &builder, StringID string, std::span<String
 std::string GetStringWithArgs(StringID string, StringParameters &args);
 
 /* Do not leak the StringBuilder to everywhere. */
-void GenerateTownNameString(StringBuilder &builder, size_t lang, uint32_t seed);
+void GenerateTownNameString(StringBuilder &builder, size_t lang, uint32_t seed, bool use_original_generator);
+void GenerateOriginalTownNameString(StringBuilder &builder, size_t lang, uint32_t seed);
+void GenerateExtendedTownNameString(StringBuilder &builder, size_t lang, uint32_t seed);
 void GetGeneratorTownName(StringBuilder &builder, const struct Town *t);
 void GRFTownNameGenerate(StringBuilder &builder, uint32_t grfid, uint16_t gen, uint32_t seed);
 

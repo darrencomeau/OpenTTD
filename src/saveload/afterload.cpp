@@ -688,7 +688,9 @@ bool AfterLoadGame()
 			}
 
 			if (IsSavegameVersionBefore(SLV_STORE_ALL_TOWN_NAMES) && t->name.empty()) {
-				t->name = GetGeneratorTownName(t);
+				TownNameParams param(t);
+				param.use_original_generator = true;
+				t->name = GetGeneratorTownName(&param,t->townnameparts);
 			}
 		}
 	}
