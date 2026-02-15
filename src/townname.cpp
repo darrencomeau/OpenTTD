@@ -17,8 +17,6 @@
 #include "gfx_layout.h"
 #include "strings_internal.h"
 
-//#include "table/townname_original.h"
-
 #include "safeguards.h"
 
 
@@ -46,7 +44,7 @@ TownNameParams::TownNameParams(const Town *t) :
  * @param par Town name parameters used to determine which generator to use.
  * @param townnameparts 'Encoded' town name.
  */
-static void GetGeneratorTownName(StringBuilder &builder, TownNameParams *par, uint32_t townnameparts)
+static void GetGeneratorTownName(StringBuilder &builder, const TownNameParams *par, uint32_t townnameparts)
 {
 	if (par->grfid == 0) {
 		auto tmp_params = MakeParameters(townnameparts, par->use_original_generator);
@@ -63,7 +61,7 @@ static void GetGeneratorTownName(StringBuilder &builder, TownNameParams *par, ui
  * @param townnameparts 'Encoded' town name.
  * @return The town name.
  */
-std::string GetGeneratorTownName(TownNameParams *par, uint32_t townnameparts)
+std::string GetGeneratorTownName(const TownNameParams *par, uint32_t townnameparts)
 {
 	std::string result;
 	StringBuilder builder(result);
