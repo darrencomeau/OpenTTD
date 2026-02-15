@@ -22,8 +22,8 @@ typedef std::set<std::string> TownNames;
  * Speeds things up a bit because these values are computed only once per name generation.
  */
 struct TownNameParams {
-	uint32_t grfid;              ///< newgrf ID (0 if not used)
-	uint16_t type;               ///< town name style
+	uint32_t grfid; ///< newgrf ID (0 if not used)
+	uint16_t type; ///< town name style
 	bool use_original_generator; ///< flag to maintain gamesave load compatibility
 
 	/**

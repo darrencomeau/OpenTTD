@@ -28,10 +28,10 @@
 
 /**
  * Generates a number from given seed.
- * @param shift_by number of bits seed is shifted to the right
- * @param max generated number is in interval 0...max-1
- * @param seed seed
- * @return seed transformed to a number from given range
+ * @param shift_by The number of bits seed is shifted to the right.
+ * @param max The generated number is in interval 0..max-1.
+ * @param seed The seed to shift.
+ * @return Given seed transformed to a number from given range.
  */
 static inline uint32_t SeedChance(uint8_t shift_by, size_t max, uint32_t seed)
 {
@@ -41,10 +41,10 @@ static inline uint32_t SeedChance(uint8_t shift_by, size_t max, uint32_t seed)
 
 /**
  * Generates a number from given seed. Uses different algorithm than SeedChance().
- * @param shift_by number of bits seed is shifted to the right
- * @param max generated number is in interval 0...max-1
- * @param seed seed
- * @return seed transformed to a number from given range
+ * @param shift_by The number of bits seed is shifted to the right.
+ * @param max The generated number is in interval 0..max-1.
+ * @param seed The seed to shift.
+ * @return Given seed transformed to a number from given range.
  */
 static inline uint32_t SeedModChance(uint8_t shift_by, size_t max, uint32_t seed)
 {
@@ -63,11 +63,11 @@ static inline uint32_t SeedModChance(uint8_t shift_by, size_t max, uint32_t seed
 
 /**
  * Generates a number from given seed.
- * @param shift_by number of bits seed is shifted to the right
- * @param max generated number is in interval -bias...max-1
- * @param seed seed
- * @param bias minimum value that can be returned
- * @return seed transformed to a number from given range
+ * @param shift_by The number of bits seed is shifted to the right.
+ * @param max The generated number is in interval bias..max-1.
+ * @param seed The seed to shift.
+ * @param bias The minimum value that can be returned.
+ * @return Given seed transformed to a number from given range.
  */
 static inline int32_t SeedChanceBias(uint8_t shift_by, size_t max, uint32_t seed, int bias)
 {
@@ -77,10 +77,10 @@ static inline int32_t SeedChanceBias(uint8_t shift_by, size_t max, uint32_t seed
 
 /**
  * Replaces a string beginning in 'org' with 'rep'.
- * @param org     string to replace
- * @param rep     string to be replaced with
- * @param str     string of the town name
- * @param start   the start index within the string for the town name
+ * @param org String to replace.
+ * @param rep String to be replaced with.
+ * @param str String of the town name.
+ * @param start The start index within the string for the town name.
  */
 static void ReplaceWords(std::string_view org, std::string_view rep, std::string &str, size_t start)
 {
@@ -90,9 +90,9 @@ static void ReplaceWords(std::string_view org, std::string_view rep, std::string
 
 /**
  * Replaces english curses and ugly letter combinations by nicer ones.
- * @param str      The string with the town name
- * @param start    The start index into the string for the first town name
- * @param original English (Original) generator was used
+ * @param str The string with the town name.
+ * @param start The start index into the string for the first town name.
+ * @param original Whether English (Original) generator was used.
  */
 static void ReplaceEnglishWords(std::string &str, size_t start, bool original)
 {
@@ -113,8 +113,8 @@ static void ReplaceEnglishWords(std::string &str, size_t start, bool original)
 
 /**
  * Generates French town name from given seed.
- * @param builder string builder
- * @param seed town name seed
+ * @param builder The string builder.
+ * @param seed The town name seed.
  */
 static void MakeFrenchTownName(StringBuilder &builder, uint32_t seed)
 {
@@ -128,15 +128,15 @@ static void MakeFrenchTownName(StringBuilder &builder, uint32_t seed)
 
 
 /**
- *  Store the lang value so that we can defer to the original generators when an enhanced generator doesn't exist
+ *  Store the lang value so that we can defer to the original generators when an enhanced generator doesn't exist.
  */
 static size_t _lang;
 
 
 /**
  * Generates original town name from lang and given seed.
- * @param builder string builder
- * @param seed town name seed
+ * @param builder The string builder.
+ * @param seed The town name seed.
  */
 static void MakeOriginalTownName(StringBuilder &builder, uint32_t seed)
 {
@@ -145,7 +145,8 @@ static void MakeOriginalTownName(StringBuilder &builder, uint32_t seed)
 
 /**
  * Town name generators
- * Order is important and must match original generators, when developing an extended generator create the function in this file and add it's name in the corect location below
+ * Order is important and must match original generators.
+ * When developing an extended generator create the function in this file and add it's name in the corect location below.
  */
 static TownNameGenerator *const _town_name_generators[] = {
 	MakeOriginalTownName,   // MakeEnglishOriginalTownName
@@ -174,9 +175,9 @@ static TownNameGenerator *const _town_name_generators[] = {
 
 /**
  * Generates town name from given seed.
- * @param builder string builder to write to
- * @param lang    town name language
- * @param seed    generation seed
+ * @param builder The string builder to write to.
+ * @param lang The town name language.
+ * @param seed The generation seed.
  */
 void GenerateExtendedTownNameString(StringBuilder &builder, size_t lang, uint32_t seed)
 {

@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file townname.cpp %Town name generators. */
+/** @file townname.cpp %Town name functions available to the rest of the program, gateway to orignal and extended town name generators . */
 
 #include "stdafx.h"
 #include "string_func.h"
@@ -24,7 +24,7 @@
 
 /**
  * Initializes this struct from town data
- * @param t town for which we will be printing name later
+ * @param t Town for which we will be printing name later.
  */
 TownNameParams::TownNameParams(const Town *t) :
 		grfid(t->townnamegrfid), // by default, use supplied data
@@ -42,8 +42,8 @@ TownNameParams::TownNameParams(const Town *t) :
 
 /**
  * Fills builder with specified town name.
- * @param builder       The string builder.
- * @param par           Town name parameters.
+ * @param builder The string builder which will hold the town name.
+ * @param par Town name parameters used to determine which generator to use.
  * @param townnameparts 'Encoded' town name.
  */
 static void GetGeneratorTownName(StringBuilder &builder, TownNameParams *par, uint32_t townnameparts)
@@ -74,7 +74,7 @@ std::string GetGeneratorTownName(TownNameParams *par, uint32_t townnameparts)
 /**
  * Fills builder with town's name.
  * @param builder String builder.
- * @param t       The town to get the name from.
+ * @param t The town to get the name from.
  */
 void GetGeneratorTownName(StringBuilder &builder, const Town *t)
 {
@@ -96,8 +96,8 @@ std::string GetGeneratorTownName(const Town *t)
 
 /**
  * Verifies the town name is valid and unique.
- * @param proposed_name is the generated or custom name to check
- * @return true if name is valid and unique
+ * @param proposed_name Is the generated or custom name to check.
+ * @return \c true iff name is valid and unique.
  */
 bool VerifyTownName(std::string proposed_name)
 {
@@ -114,9 +114,8 @@ bool VerifyTownName(std::string proposed_name)
 
 /**
  * Generates valid town name.
- * @param randomizer the source of random data for generating the name
- * @param townnameparts if a name is generated, it's stored there
- * @param town_names if a name is generated, check its uniqueness with the set
+ * @param randomizer The source of random data for generating the name.
+ * @param town_name The name which was generated, may be empty if a new unique value is not found.
  * @return true iff a name was generated
  */
 bool GenerateTownName(Randomizer &randomizer, std::string *town_name)
@@ -144,10 +143,11 @@ bool GenerateTownName(Randomizer &randomizer, std::string *town_name)
 
 
 /**
- * Generates town name from given seed.
- * @param builder string builder to write to
- * @param lang    town name language
- * @param seed    generation seed
+ * Generates town name from a given seed using either original or extended generators.
+ * @param builder String builder to write name to.
+ * @param lang Index of the town name generator to use.
+ * @param seed Generation seed.
+ * @param use_original_generator Flag if we should use original generator (true) or extended generator (false).
  */
 void GenerateTownNameString(StringBuilder &builder, size_t lang, uint32_t seed, bool use_original_generator)
 {

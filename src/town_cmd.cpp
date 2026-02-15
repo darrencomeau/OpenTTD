@@ -2027,7 +2027,7 @@ static void UpdateTownGrowth(Town *t);
  *
  * @param t The town.
  * @param tile Where to put it.
- * @param townnameparts The town name.
+ * @param name The town name.
  * @param size The preset size of the town.
  * @param city Should we create a city?
  * @param layout The road layout of the town.
@@ -2185,7 +2185,6 @@ static bool IsUniqueTownName(const std::string &name)
  * @param city Should we build a city?
  * @param layout The town road layout (@see TownLayout).
  * @param random_location Should we use a random location? (randomize \c tile )
- * @param townnameparts Town name parts.
  * @param text Custom name for the town. If empty, the town name parts will be used.
  * @return The cost of this operation or an error.
  */
@@ -2375,7 +2374,7 @@ HouseZones GetClimateMaskForLandscape()
 /**
  * Create a random town somewhere in the world.
  * @param attempts How many times should we try?
- * @param townnameparts The name of the town.
+ * @param town_name The name of the town.
  * @param size The size preset of the town.
  * @param city Should we build a city?
  * @param layout The road layout to build.

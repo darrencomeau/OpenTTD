@@ -5,7 +5,11 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file townname_original.cpp %Town name generators. */
+/** @file townname_original.cpp %Town name generators.
+ *
+ * Original generators in this file must be maintained to return the same values for a given seed so that historic save games will load the same names as before.
+ * If the original generator fails to provide suitable names due to error, limit in available names, etc, it can be extended either with additional logic or completely new logic in a new function in the file townname_extended.cpp.
+ */
 
 #include "stdafx.h"
 #include "string_func.h"
@@ -25,10 +29,10 @@
 
 /**
  * Generates a number from given seed.
- * @param shift_by number of bits seed is shifted to the right
- * @param max generated number is in interval 0...max-1
- * @param seed seed
- * @return seed transformed to a number from given range
+ * @param shift_by The number of bits seed is shifted to the right.
+ * @param max The generated number is in interval 0..max-1.
+ * @param seed The seed to shift.
+ * @return Given seed transformed to a number from given range.
  */
 static inline uint32_t SeedChance(uint8_t shift_by, size_t max, uint32_t seed)
 {
@@ -38,10 +42,10 @@ static inline uint32_t SeedChance(uint8_t shift_by, size_t max, uint32_t seed)
 
 /**
  * Generates a number from given seed. Uses different algorithm than SeedChance().
- * @param shift_by number of bits seed is shifted to the right
- * @param max generated number is in interval 0...max-1
- * @param seed seed
- * @return seed transformed to a number from given range
+ * @param shift_by The number of bits seed is shifted to the right.
+ * @param max The generated number is in interval 0..max-1.
+ * @param seed The seed to shift.
+ * @return Given seed transformed to a number from given range.
  */
 static inline uint32_t SeedModChance(uint8_t shift_by, size_t max, uint32_t seed)
 {
@@ -60,11 +64,11 @@ static inline uint32_t SeedModChance(uint8_t shift_by, size_t max, uint32_t seed
 
 /**
  * Generates a number from given seed.
- * @param shift_by number of bits seed is shifted to the right
- * @param max generated number is in interval -bias...max-1
- * @param seed seed
- * @param bias minimum value that can be returned
- * @return seed transformed to a number from given range
+ * @param shift_by The number of bits seed is shifted to the right.
+ * @param max The generated number is in interval bias..max-1.
+ * @param seed The seed to shift.
+ * @param bias The minimum value that can be returned.
+ * @return Given seed transformed to a number from given range.
  */
 static inline int32_t SeedChanceBias(uint8_t shift_by, size_t max, uint32_t seed, int bias)
 {
@@ -74,10 +78,10 @@ static inline int32_t SeedChanceBias(uint8_t shift_by, size_t max, uint32_t seed
 
 /**
  * Replaces a string beginning in 'org' with 'rep'.
- * @param org     string to replace
- * @param rep     string to be replaced with
- * @param str     string of the town name
- * @param start   the start index within the string for the town name
+ * @param org String to replace.
+ * @param rep String to be replaced with.
+ * @param str String of the town name.
+ * @param start The start index within the string for the town name.
  */
 static void ReplaceWords(std::string_view org, std::string_view rep, std::string &str, size_t start)
 {
@@ -87,9 +91,9 @@ static void ReplaceWords(std::string_view org, std::string_view rep, std::string
 
 /**
  * Replaces english curses and ugly letter combinations by nicer ones.
- * @param str      The string with the town name
- * @param start    The start index into the string for the first town name
- * @param original English (Original) generator was used
+ * @param str The string with the town name.
+ * @param start The start index into the string for the first town name.
+ * @param original Whether English (Original) generator was used.
  */
 static void ReplaceEnglishWords(std::string &str, size_t start, bool original)
 {
@@ -109,8 +113,8 @@ static void ReplaceEnglishWords(std::string &str, size_t start, bool original)
 
 /**
  * Generates English (Original) town name from given seed.
- * @param builder string builder
- * @param seed town name seed
+ * @param builder The string builder.
+ * @param seed The town name seed.
  */
 static void MakeEnglishOriginalTownName(StringBuilder &builder, uint32_t seed)
 {
@@ -136,8 +140,8 @@ static void MakeEnglishOriginalTownName(StringBuilder &builder, uint32_t seed)
 
 /**
  * Generates English (Additional) town name from given seed.
- * @param builder string builder
- * @param seed town name seed
+ * @param builder The string builder.
+ * @param seed The town name seed.
  */
 static void MakeEnglishAdditionalTownName(StringBuilder &builder, uint32_t seed)
 {
@@ -171,8 +175,8 @@ static void MakeEnglishAdditionalTownName(StringBuilder &builder, uint32_t seed)
 
 /**
  * Generates Austrian town name from given seed.
- * @param builder string builder
- * @param seed town name seed
+ * @param builder The string builder.
+ * @param seed The town name seed.
  */
 static void MakeAustrianTownName(StringBuilder &builder, uint32_t seed)
 {
@@ -212,8 +216,8 @@ static void MakeAustrianTownName(StringBuilder &builder, uint32_t seed)
 
 /**
  * Generates German town name from given seed.
- * @param builder string builder
- * @param seed town name seed
+ * @param builder The string builder.
+ * @param seed The town name seed.
  */
 static void MakeGermanTownName(StringBuilder &builder, uint32_t seed)
 {
@@ -252,8 +256,8 @@ static void MakeGermanTownName(StringBuilder &builder, uint32_t seed)
 
 /**
  * Generates Latin-American town name from given seed.
- * @param builder string builder
- * @param seed town name seed
+ * @param builder The string builder.
+ * @param seed The town name seed.
  */
 static void MakeSpanishTownName(StringBuilder &builder, uint32_t seed)
 {
@@ -263,8 +267,8 @@ static void MakeSpanishTownName(StringBuilder &builder, uint32_t seed)
 
 /**
  * Generates French town name from given seed.
- * @param builder string builder
- * @param seed town name seed
+ * @param builder The string builder.
+ * @param seed The town name seed.
  */
 static void MakeFrenchTownName(StringBuilder &builder, uint32_t seed)
 {
@@ -274,8 +278,8 @@ static void MakeFrenchTownName(StringBuilder &builder, uint32_t seed)
 
 /**
  * Generates Silly town name from given seed.
- * @param builder string builder
- * @param seed town name seed
+ * @param builder The string builder.
+ * @param seed The town name seed.
  */
 static void MakeSillyTownName(StringBuilder &builder, uint32_t seed)
 {
@@ -286,8 +290,8 @@ static void MakeSillyTownName(StringBuilder &builder, uint32_t seed)
 
 /**
  * Generates Swedish town name from given seed.
- * @param builder string builder
- * @param seed town name seed
+ * @param builder The string builder.
+ * @param seed The town name seed.
  */
 static void MakeSwedishTownName(StringBuilder &builder, uint32_t seed)
 {
@@ -310,8 +314,8 @@ static void MakeSwedishTownName(StringBuilder &builder, uint32_t seed)
 
 /**
  * Generates Dutch town name from given seed.
- * @param builder string builder
- * @param seed town name seed
+ * @param builder The string builder.
+ * @param seed The town name seed.
  */
 static void MakeDutchTownName(StringBuilder &builder, uint32_t seed)
 {
@@ -333,8 +337,8 @@ static void MakeDutchTownName(StringBuilder &builder, uint32_t seed)
 
 /**
  * Generates Finnish town name from given seed.
- * @param builder string builder
- * @param seed town name seed
+ * @param builder The string builder.
+ * @param seed The town name seed.
  */
 static void MakeFinnishTownName(StringBuilder &builder, uint32_t seed)
 {
@@ -379,8 +383,8 @@ static void MakeFinnishTownName(StringBuilder &builder, uint32_t seed)
 
 /**
  * Generates Polish town name from given seed.
- * @param builder string builder
- * @param seed town name seed
+ * @param builder The string builder.
+ * @param seed The town name seed.
  */
 static void MakePolishTownName(StringBuilder &builder, uint32_t seed)
 {
@@ -441,8 +445,8 @@ static void MakePolishTownName(StringBuilder &builder, uint32_t seed)
 
 /**
  * Generates Czech town name from given seed.
- * @param builder string builder
- * @param seed town name seed
+ * @param builder The string builder.
+ * @param seed The town name seed.
  */
 static void MakeCzechTownName(StringBuilder &builder, uint32_t seed)
 {
@@ -588,8 +592,8 @@ static void MakeCzechTownName(StringBuilder &builder, uint32_t seed)
 
 /**
  * Generates Romanian town name from given seed.
- * @param builder string builder
- * @param seed town name seed
+ * @param builder The string builder.
+ * @param seed The town name seed.
  */
 static void MakeRomanianTownName(StringBuilder &builder, uint32_t seed)
 {
@@ -599,8 +603,8 @@ static void MakeRomanianTownName(StringBuilder &builder, uint32_t seed)
 
 /**
  * Generates Slovak town name from given seed.
- * @param builder string builder
- * @param seed town name seed
+ * @param builder The string builder.
+ * @param seed The town name seed.
  */
 static void MakeSlovakTownName(StringBuilder &builder, uint32_t seed)
 {
@@ -610,8 +614,8 @@ static void MakeSlovakTownName(StringBuilder &builder, uint32_t seed)
 
 /**
  * Generates Norwegian town name from given seed.
- * @param builder string builder
- * @param seed town name seed
+ * @param builder The string builder.
+ * @param seed The town name seed.
  */
 static void MakeNorwegianTownName(StringBuilder &builder, uint32_t seed)
 {
@@ -632,8 +636,8 @@ static void MakeNorwegianTownName(StringBuilder &builder, uint32_t seed)
 
 /**
  * Generates Hungarian town name from given seed.
- * @param builder string builder
- * @param seed town name seed
+ * @param builder The string builder.
+ * @param seed The town name seed.
  */
 static void MakeHungarianTownName(StringBuilder &builder, uint32_t seed)
 {
@@ -660,8 +664,8 @@ static void MakeHungarianTownName(StringBuilder &builder, uint32_t seed)
 
 /**
  * Generates Swiss town name from given seed.
- * @param builder string builder
- * @param seed town name seed
+ * @param builder The string builder.
+ * @param seed The town name seed.
  */
 static void MakeSwissTownName(StringBuilder &builder, uint32_t seed)
 {
@@ -671,8 +675,8 @@ static void MakeSwissTownName(StringBuilder &builder, uint32_t seed)
 
 /**
  * Generates Danish town name from given seed.
- * @param builder string builder
- * @param seed town name seed
+ * @param builder The string builder.
+ * @param seed The town name seed.
  */
 static void MakeDanishTownName(StringBuilder &builder, uint32_t seed)
 {
@@ -688,8 +692,8 @@ static void MakeDanishTownName(StringBuilder &builder, uint32_t seed)
 
 /**
  * Generates Turkish town name from given seed.
- * @param builder string builder
- * @param seed town name seed
+ * @param builder The string builder.
+ * @param seed The town name seed.
  */
 static void MakeTurkishTownName(StringBuilder &builder, uint32_t seed)
 {
@@ -722,8 +726,8 @@ static void MakeTurkishTownName(StringBuilder &builder, uint32_t seed)
 
 /**
  * Generates Italian town name from given seed.
- * @param builder string builder
- * @param seed town name seed
+ * @param builder The string builder.
+ * @param seed The town name seed.
  */
 static void MakeItalianTownName(StringBuilder &builder, uint32_t seed)
 {
@@ -768,8 +772,8 @@ static void MakeItalianTownName(StringBuilder &builder, uint32_t seed)
 
 /**
  * Generates Catalan town name from given seed.
- * @param builder string builder
- * @param seed town name seed
+ * @param builder The string builder.
+ * @param seed The town name seed.
  */
 static void MakeCatalanTownName(StringBuilder &builder, uint32_t seed)
 {
@@ -828,9 +832,9 @@ static TownNameGenerator *const _town_name_generators[] = {
 
 /**
  * Generates town name from given seed.
- * @param builder string builder to write to
- * @param lang    town name language
- * @param seed    generation seed
+ * @param builder The string builder to write to.
+ * @param lang The town name language.
+ * @param seed The generation seed.
  */
 void GenerateOriginalTownNameString(StringBuilder &builder, size_t lang, uint32_t seed)
 {
