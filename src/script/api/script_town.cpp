@@ -304,12 +304,11 @@
 	}
 
 	std::string text;
+	uint32_t townnameparts = 0;
 	if (name != nullptr) {
 		text = name->GetDecodedText();
 		EnforcePreconditionCustomError(false, ::Utf8StringLength(text) < MAX_LENGTH_TOWN_NAME_CHARS, ScriptError::ERR_PRECONDITION_STRING_TOO_LONG);
-	}
-	uint32_t townnameparts;
-	if (!GenerateTownName(ScriptObject::GetRandomizer(), &townnameparts)) {
+	} else if (!GenerateTownName(ScriptObject::GetRandomizer(), &townnameparts)) {
 		ScriptObject::SetLastError(ScriptError::ERR_NAME_IS_NOT_UNIQUE);
 		return false;
 	}
